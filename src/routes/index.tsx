@@ -55,7 +55,7 @@ function Index() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-2">
-            <img src={logo} alt="Albaine SRL" className="h-14 w-auto md:h-16" />
+            <img src={logo} alt="Albaine SRL" className="h-20 w-auto md:h-24" />
           </a>
           <nav className="hidden gap-8 text-sm font-medium md:flex">
             {[
@@ -104,7 +104,7 @@ function Index() {
             style={{ y: useTransform(scrollYProgress, [0, 1], [0, -80]), opacity }}
           >
             <motion.div variants={fadeUp}>
-              <img src={logo} alt="Albaine SRL" className="mb-6 h-20 w-auto md:h-24" />
+              <img src={logo} alt="Albaine SRL" className="mb-8 h-32 w-auto drop-shadow-sm md:h-40" />
             </motion.div>
             <motion.span
               variants={fadeUp}
@@ -317,7 +317,7 @@ function Index() {
       {/* Footer */}
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row">
-          <img src={logo} alt="Albaine SRL" className="h-12 w-auto" />
+          <img src={logo} alt="Albaine SRL" className="h-16 w-auto" />
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Albaine SRL. Todos los derechos reservados.
           </p>
