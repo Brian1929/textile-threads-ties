@@ -629,7 +629,7 @@ function Index() {
               window.scrollTo({ top: 0, behavior: "smooth" });
               window.history.replaceState(null, "", window.location.pathname);
             }}
-            className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+            className="fixed bottom-24 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
             aria-label="Volver arriba"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -640,15 +640,15 @@ function Index() {
       </AnimatePresence>
 
       {/* Floating WhatsApp Quick Chat */}
-      <div className="fixed bottom-8 left-8 z-50 flex flex-col items-start">
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end">
         <AnimatePresence>
           {showWaChat && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20, originX: 0, originY: 1 }}
+              initial={{ opacity: 0, scale: 0.8, y: 20, originX: 1, originY: 1 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="absolute bottom-16 left-0 w-80 rounded-2xl border border-border bg-card shadow-2xl overflow-hidden z-50"
+              className="absolute bottom-16 right-0 w-80 rounded-2xl border border-border bg-card shadow-2xl overflow-hidden z-50"
             >
               {/* Header */}
               <div className="bg-gradient-to-r from-[#075e54] to-[#128c7e] px-4 py-3 flex items-center justify-between">
