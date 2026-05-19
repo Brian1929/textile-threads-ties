@@ -49,11 +49,13 @@ const stagger = {
 function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const yLeft = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const yRight = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const slides = [heroImg, heroImg2, heroImg3, heroImg4];
 
   useEffect(() => {
@@ -72,6 +74,12 @@ function Index() {
       window.history.replaceState(null, "", window.location.pathname);
     }
 
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     const handleScroll = () => {
       if (window.scrollY > 400) {
         setShowScrollTop(true);
@@ -81,7 +89,10 @@ function Index() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -165,7 +176,7 @@ function Index() {
             variants={stagger}
             initial="hidden"
             animate="show"
-            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -80]), opacity }}
+            style={{ y: isMobile ? 0 : yLeft, opacity: isMobile ? 1 : opacity }}
             className="md:col-span-6 lg:col-span-5"
           >
             <motion.div variants={fadeUp}>
@@ -208,7 +219,7 @@ function Index() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="relative md:col-span-6 lg:col-span-7 w-full md:w-[105%] lg:w-[110%] md:translate-x-6 lg:translate-x-12"
-            style={{ y }}
+            style={{ y: isMobile ? 0 : yRight }}
           >
             <div
               className="relative aspect-[4/3] overflow-hidden rounded-3xl group"
