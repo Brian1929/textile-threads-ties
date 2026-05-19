@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import { Award, Users, Sparkles, MapPin, Phone, Mail, ArrowRight, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,8 +49,10 @@ const stagger = {
 function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const yLeft = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const yRight = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const yLeftRaw = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const yRightRaw = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const yLeft = useSpring(yLeftRaw, { stiffness: 90, damping: 25, restDelta: 0.001 });
+  const yRight = useSpring(yRightRaw, { stiffness: 90, damping: 25, restDelta: 0.001 });
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -176,7 +178,13 @@ function Index() {
             variants={stagger}
             initial="hidden"
             animate="show"
-            style={{ y: isMobile ? 0 : yLeft, opacity: isMobile ? 1 : opacity }}
+            style={{ 
+              y: yLeft, 
+              opacity,
+              willChange: "transform, opacity",
+              transform: "translate3d(0,0,0)",
+              backfaceVisibility: "hidden"
+            }}
             className="md:col-span-6 lg:col-span-5"
           >
             <motion.div variants={fadeUp}>
@@ -219,26 +227,39 @@ function Index() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="relative md:col-span-6 lg:col-span-7 w-full md:w-[105%] lg:w-[110%] md:translate-x-6 lg:translate-x-12"
-            style={{ y: isMobile ? 0 : yRight }}
+            style={{ 
+              y: yRight,
+              willChange: "transform",
+              transform: "translate3d(0,0,0)",
+              backfaceVisibility: "hidden"
+            }}
           >
             <div
               className="relative aspect-[4/3] overflow-hidden rounded-3xl group"
               style={{ boxShadow: "var(--shadow-soft)" }}
             >
-              <AnimatePresence mode="wait">
+              {slides.map((slide, index) => (
                 <motion.img
-                  key={currentSlide}
-                  src={slides[currentSlide]}
-                  alt={`Hilos textiles de calidad - Diapositiva ${currentSlide + 1}`}
+                  key={index}
+                  src={slide}
+                  alt={`Hilos textiles de calidad - Diapositiva ${index + 1}`}
                   width={1920}
                   height={1280}
                   className="absolute inset-0 h-full w-full object-cover rounded-3xl"
-                  initial={{ opacity: 0, scale: 1.08 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
+                  initial={{ opacity: index === 0 ? 1 : 0 }}
+                  animate={{ 
+                    opacity: currentSlide === index ? 1 : 0,
+                    scale: currentSlide === index ? 1 : (isMobile ? 1 : 1.05)
+                  }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
+                  style={{ 
+                    zIndex: currentSlide === index ? 1 : 0,
+                    willChange: "opacity, transform",
+                    transform: "translate3d(0,0,0)",
+                    backfaceVisibility: "hidden"
+                  }}
                 />
-              </AnimatePresence>
+              ))}
 
               {/* Gradient overlay for readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
