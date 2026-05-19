@@ -14,6 +14,12 @@ import us3 from "@/assets/us-3.png";
 import us4 from "@/assets/us-4.png";
 import us5 from "@/assets/us-5.png";
 
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.335 4.963L2 22l5.21-.1.356-.137a9.9 9.9 0 0 0 4.444 1.25H12c5.506 0 9.989-4.478 9.99-9.984C22 5.48 17.519 2 12.012 2zm5.72 13.91c-.246.696-1.425 1.31-1.95 1.406-.475.088-.95.125-3.088-.737-2.612-1.056-4.288-3.712-4.42-3.887-.13-.175-1.075-1.43-1.075-2.73 0-1.3.682-1.938.925-2.2.2-.218.425-.27.562-.27h.4c.125 0 .288-.05.45.337.162.388.562 1.375.612 1.475.05.1.088.213.025.338-.063.125-.138.2-.275.362-.138.163-.288.275-.413.425-.137.15-.287.313-.125.588.163.275.725 1.2 1.55 1.925.825.725 1.512.95 1.8 1.075.288.125.463.1.638-.1.175-.2.75-.875.95-1.175.2-.3.4-.25.675-.15.275.1.1.862.775 1.2.675.338 1.112.563 1.212.725.1.163.1.938-.146 1.634z"/>
+  </svg>
+);
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -58,6 +64,8 @@ function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showWaChat, setShowWaChat] = useState(false);
+  const [hasNewMessage, setHasNewMessage] = useState(true);
   const slides = [heroImg, heroImg2, heroImg3, heroImg4];
 
   useEffect(() => {
@@ -630,6 +638,106 @@ function Index() {
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* Floating WhatsApp Quick Chat */}
+      <div className="fixed bottom-8 left-8 z-50 flex flex-col items-start">
+        <AnimatePresence>
+          {showWaChat && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20, originX: 0, originY: 1 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              className="absolute bottom-16 left-0 w-80 rounded-2xl border border-border bg-card shadow-2xl overflow-hidden z-50"
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-r from-[#075e54] to-[#128c7e] px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm border border-white/20">
+                      <img src={logo} alt="Albaine SRL" className="h-auto w-full object-contain" />
+                    </div>
+                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#25D366] ring-2 ring-card animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-white">Albaine SRL</h4>
+                    <p className="text-[10px] text-white/80">Normalmente responde al instante</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowWaChat(false);
+                  }}
+                  className="text-white/80 hover:text-white text-lg font-bold p-1 cursor-pointer"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Chat Body */}
+              <div 
+                className="p-4 bg-[#efeae2] relative min-h-[140px] flex flex-col justify-end"
+                style={{
+                  backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')",
+                  backgroundSize: "cover",
+                  backgroundBlendMode: "overlay",
+                }}
+              >
+                <div className="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-foreground max-w-[85%] relative self-start mb-2">
+                  <p>¡Hola! 👋 Bienvenido a Albaine SRL.</p>
+                  <p className="mt-1">¿Buscas insumos textiles al por mayor o detalle? Escríbenos directamente aquí para cotizar o resolver tus dudas. 🧵✨</p>
+                  <span className="block text-[9px] text-muted-foreground/80 text-right mt-1.5">
+                    {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </div>
+
+              {/* Chat Footer */}
+              <a 
+                href="https://wa.me/18099714450?text=Hola%20Albaine%20SRL%2C%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20sus%20insumos%20y%20componentes%20textiles."
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  setHasNewMessage(false);
+                  setShowWaChat(false);
+                }}
+                className="p-3 bg-card border-t border-border flex items-center justify-between hover:bg-secondary/20 transition-colors group cursor-pointer"
+              >
+                <span className="text-xs text-muted-foreground">Escribe un mensaje de WhatsApp...</span>
+                <div className="h-8 w-8 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-md shadow-[#25D366]/20 transition-transform group-hover:scale-110 group-hover:rotate-12">
+                  <WhatsAppIcon className="h-4 w-4 fill-white" />
+                </div>
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bubble Trigger Button */}
+        <motion.button
+          onClick={() => {
+            setShowWaChat(prev => !prev);
+            setHasNewMessage(false);
+          }}
+          className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 transition-colors hover:bg-[#20ba5a] cursor-pointer"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          animate={hasNewMessage ? {
+            scale: [1, 1.05, 1],
+            transition: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+          } : {}}
+          aria-label="Abrir chat de WhatsApp"
+        >
+          <WhatsAppIcon className="h-6 w-6 fill-white" />
+          
+          {/* Notification Badge */}
+          {hasNewMessage && (
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground ring-2 ring-card animate-bounce">
+              1
+            </span>
+          )}
+        </motion.button>
+      </div>
     </div>
   );
 }
