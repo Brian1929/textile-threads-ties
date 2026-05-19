@@ -310,13 +310,13 @@ function Index() {
               </motion.h2>
               <motion.p variants={fadeUp} className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 Somos un grupo de socios comerciales especializados en insumos y componentes textiles,
-                con una trayectoria de más de 40 años demostrando nuestro compromiso y valores
-                familiares a través de distintas generaciones.
+                comprometidos con la excelencia y la confianza a través de valores familiares
+                forjados de generación en generación.
               </motion.p>
               <motion.div variants={fadeUp} className="mt-8 grid grid-cols-2 gap-6 border-t border-border/60 pt-8">
                 <div>
-                  <h4 className="text-3xl font-semibold text-primary">40+ Años</h4>
-                  <p className="mt-1 text-sm text-muted-foreground">Suministrando calidad en insumos textiles.</p>
+                  <h4 className="text-3xl font-semibold text-primary">Calidad Elite</h4>
+                  <p className="mt-1 text-sm text-muted-foreground">Componentes duraderos para confección industrial.</p>
                 </div>
                 <div>
                   <h4 className="text-3xl font-semibold text-primary">3 Gen</h4>
