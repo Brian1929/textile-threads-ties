@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { useRef, useState, useEffect } from "react";
-import { Award, Users, Sparkles, MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import { Award, Users, Sparkles, MapPin, Phone, Mail, ArrowRight, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/albaine-logo.png";
 import heroImg from "@/assets/textile-hero.jpg";
@@ -53,6 +53,7 @@ function Index() {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const slides = [heroImg, heroImg2, heroImg3, heroImg4];
 
   useEffect(() => {
@@ -70,6 +71,17 @@ function Index() {
     if (window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }
+
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -564,6 +576,28 @@ function Index() {
           </p>
         </div>
       </footer>
+
+      {/* Floating Back to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              window.history.replaceState(null, "", window.location.pathname);
+            }}
+            className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+            aria-label="Volver arriba"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <ArrowUp className="h-5 w-5 text-primary-foreground" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
